@@ -433,7 +433,7 @@
             <div class="contact-icon">&#9993;&#65039;</div>
             <div>
               <strong>Email</strong>
-              <a href="mailto:info@mrfixandfit.co.uk" style="color: var(--gold);">info@mrfixandfit.co.uk</a>
+              <a href="/cdn-cgi/l/email-protection#21484f474e614c53474859404f454748550f424e0f544a" style="color: var(--gold);"><span class="__cf_email__" data-cfemail="6a03040c052a07180c03120b040e0c031e440905441f01">[email&#160;protected]</span></a>
             </div>
           </div>
           <div class="contact-detail">
@@ -449,28 +449,34 @@
         </div>
         <div class="contact-form" id="quote">
           <h3>Get A Quote / Send Us A Message</h3>
-          <div class="form-group">
-            <label for="name">Name *</label>
-            <input type="text" id="name" name="name" required placeholder="Your full name">
-          </div>
-          <div class="form-group">
-            <label for="email">Email *</label>
-            <input type="email" id="email" name="email" required placeholder="you@example.com">
-          </div>
-          <div class="form-group">
-            <label for="phone">Telephone *</label>
-            <input type="tel" id="phone" name="phone" required placeholder="Your phone number">
-          </div>
-          <div class="form-group">
-            <label for="message">Message</label>
-            <textarea id="message" name="message" placeholder="Tell us about the job you need done..."></textarea>
-          </div>
-          <div class="form-consent">
-            <input type="checkbox" id="consent" required>
-            <label for="consent">I agree that this data will be stored and processed for the purpose of establishing contact. I am aware that I can revoke my consent at any time.</label>
-          </div>
-          <button type="submit" class="form-submit" onclick="handleSubmit(event)">Send Message &#8594;</button>
-          <p id="formMsg" style="text-align:center; margin-top:12px; font-size:0.9rem; display:none;"></p>
+          <form id="contactForm" novalidate>
+            <input type="hidden" name="access_key" value="9479a00f-2ffe-4660-9107-2a33587ef0b3">
+            <input type="hidden" name="subject" value="New Enquiry from Mr Fix And Fit Website">
+            <input type="hidden" name="from_name" value="Mr Fix And Fit Website">
+            <div class="form-group">
+              <label for="name">Name *</label>
+              <input type="text" id="name" name="name" required placeholder="Your full name">
+            </div>
+            <div class="form-group">
+              <label for="email">Email *</label>
+              <input type="email" id="email" name="email" required placeholder="you@example.com">
+            </div>
+            <div class="form-group">
+              <label for="phone">Telephone *</label>
+              <input type="tel" id="phone" name="phone" required placeholder="Your phone number">
+            </div>
+            <div class="form-group">
+              <label for="message">Message *</label>
+              <textarea id="message" name="message" required placeholder="Tell us about the job you need done..."></textarea>
+            </div>
+            <div class="form-consent">
+              <input type="checkbox" id="consent" name="consent">
+              <label for="consent">I agree that this data will be stored and processed for the purpose of establishing contact. I am aware that I can revoke my consent at any time. *</label>
+            </div>
+            <p id="formError" style="text-align:center; margin-top:8px; margin-bottom:8px; font-size:0.9rem; display:none; color:#ef4444; font-weight:600;"></p>
+            <button type="submit" class="form-submit">Send Message &#8594;</button>
+            <p id="formSuccess" style="text-align:center; margin-top:12px; font-size:0.9rem; display:none; color:#22c55e; font-weight:600;"></p>
+          </form>
         </div>
       </div>
     </div>
@@ -489,21 +495,100 @@
   </footer>
 
   <script>
-    function handleSubmit(e) {
+    document.getElementById('contactForm').addEventListener('submit', async function(e) {
       e.preventDefault();
-      var name = document.getElementById('name').value;
-      var email = document.getElementById('email').value;
-      var phone = document.getElementById('phone').value;
-      var message = document.getElementById('message').value;
-      var consent = document.getElementById('consent').checked;
-      var msg = document.getElementById('formMsg');
-      if (!name || !email || !phone) {
-        msg.style.display = 'block'; msg.style.color = '#ef4444';
-        msg.textContent = 'Please fill in all required fields.'; return;
+      var form = this;
+      var name = document.getElementById('name');
+      var email = document.getElementById('email');
+      var phone = document.getElementById('phone');
+      var message = document.getElementById('message');
+      var consent = document.getElementById('consent');
+      var errorMsg = document.getElementById('formError');
+      var successMsg = document.getElementById('formSuccess');
+      var fields = [name, email, phone, message];
+      var hasError = false;
+
+      // Reset styles
+      errorMsg.style.display = 'none';
+      successMsg.style.display = 'none';
+      fields.forEach(function(f) { f.style.border = '1px solid rgba(255,255,255,0.1)'; });
+      consent.parentElement.style.color = '';
+
+      // Validate fields
+      fields.forEach(function(f) {
+        if (!f.value.trim()) {
+          f.style.border = '2px solid #ef4444';
+          hasError = true;
+        }
+      });
+
+      if (hasError) {
+        errorMsg.textContent = 'Please fill in all required fields.';
+        errorMsg.style.display = 'block';
+        return;
       }
-      if (!consent) {
-        msg.style.display = 'block'; msg.style.color = '#ef4444';
-        msg.textContent = 'Please agree to the data consent.'; return;
+
+      // Validate email format
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+        email.style.border = '2px solid #ef4444';
+        errorMsg.textContent = 'Please enter a valid email address.';
+        errorMsg.style.display = 'block';
+        return;
       }
-      var subject = encodeURIComponent('Website Enquiry from ' + name);
-      var body = encodeURIComponent('Name: ' + name + '\nEmail: ' + email + '\nPhone: ' + phone +
+
+      // Validate checkbox
+      if (!consent.checked) {
+        consent.parentElement.style.color = '#ef4444';
+        errorMsg.textContent = 'Please tick the consent checkbox to proceed.';
+        errorMsg.style.display = 'block';
+        return;
+      }
+
+      // Submit to Web3Forms
+      var submitBtn = form.querySelector('button[type="submit"]');
+      submitBtn.textContent = 'Sending...';
+      submitBtn.disabled = true;
+
+      try {
+        var formData = new FormData(form);
+        var object = Object.fromEntries(formData);
+        var json = JSON.stringify(object);
+
+        var response = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: json
+        });
+        var result = await response.json();
+
+        if (result.success) {
+          successMsg.textContent = 'Thank you! Your message has been sent. We will get back to you shortly.';
+          successMsg.style.display = 'block';
+          form.reset();
+          fields.forEach(function(f) { f.style.border = '1px solid rgba(255,255,255,0.1)'; });
+        } else {
+          errorMsg.textContent = 'Something went wrong. Please try again or call us directly.';
+          errorMsg.style.display = 'block';
+        }
+      } catch (err) {
+        errorMsg.textContent = 'Something went wrong. Please try again or call us directly.';
+        errorMsg.style.display = 'block';
+      }
+
+      submitBtn.innerHTML = 'Send Message &#8594;';
+      submitBtn.disabled = false;
+    });
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+      a.addEventListener('click', function(e) {
+        e.preventDefault();
+        var target = document.querySelector(this.getAttribute('href'));
+        if (target) { target.scrollIntoView({ behavior: 'smooth' }); }
+        var navLinks = document.getElementById('navLinks');
+        if (navLinks) { navLinks.classList.remove('open'); }
+      });
+    });
+  </script>
+</body>
+</html>
