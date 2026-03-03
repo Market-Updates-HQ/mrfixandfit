@@ -286,7 +286,7 @@
       <div class="nav-links" id="navLinks">
         <a href="#services">Services</a>
         <a href="#mission">About Us</a>
-        <a href="#contact" style="color: #f59e0b; font-weight: 700;">Get A Quote</a>
+        <a href="#quote" style="color: #f59e0b; font-weight: 700;">Get A Quote</a>
         <a href="#contact" class="nav-cta">Get In Touch &#8594;</a>
       </div>
       <button class="mobile-toggle" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="Menu">
@@ -433,7 +433,7 @@
             <div class="contact-icon">&#9993;&#65039;</div>
             <div>
               <strong>Email</strong>
-              <a href="/cdn-cgi/l/email-protection#761f181019361b04101f0e171812101f0258151958031d"><span class="__cf_email__" data-cfemail="026b6c646d426f70646b7a636c66646b762c616d2c7769">[email&#160;protected]</span></a>
+              <a href="mailto:info@mrfixandfit.co.uk" style="color: var(--gold);">info@mrfixandfit.co.uk</a>
             </div>
           </div>
           <div class="contact-detail">
@@ -447,8 +447,8 @@
             <img src="images/logo-large.png" alt="Mr Fix And Fit Logo" style="border-radius:12px; max-width: 280px; opacity: 0.85;">
           </div>
         </div>
-        <div class="contact-form">
-          <h3>Send Us A Message</h3>
+        <div class="contact-form" id="quote">
+          <h3>Get A Quote / Send Us A Message</h3>
           <div class="form-group">
             <label for="name">Name *</label>
             <input type="text" id="name" name="name" required placeholder="Your full name">
@@ -488,7 +488,7 @@
     </div>
   </footer>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  <script>
     function handleSubmit(e) {
       e.preventDefault();
       var name = document.getElementById('name').value;
